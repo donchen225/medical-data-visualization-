@@ -10,13 +10,34 @@ app.use(express.static(__dirname + '/../client/dist'));
 // TODO: Fill in the request handler for this endpoint!
 // ----------------------------------------------------
 app.get('/api/heartFailures', (req, res) => {
-  axios.get('https://data.medicare.gov/resource/ynj2-r877.json', {
+  axios.get(`https://data.medicare.gov/resource/ynj2-r877.json?measure_id='MORT_30_HF'&$LIMIT=50000&$where=state NOT IN ('AS', 'DC', 'GU', 'MP', 'PR', 'VI')`, {
     headers: {
       token: MEDICARE_APP_KEY
     }
   })
-  .then((response) => {
-    res.status(200).send(response.data);
+  .then(({data}) => {
+    let stateRecords = {};
+    // iterate over records in data and check if curr record's state does not exits then initialize to arr w record
+    data.forEach((record) => {
+      if (!stateRecords[record['state']]) {
+        stateRecords[record['state']] = [ parseInt(record['score']) ]
+        // else if, check if curr record's state alrdy exist and score is avaliable then push into state's arr
+      } else if (stateRecords[record['state']] && record['score'] !== 'Not Available') {
+        stateRecords[record['state']].push(parseInt(record['score']));
+      }
+    });
+    console.log('stateRecords', stateRecords);
+
+    // helper function to get average of an arr
+    const arrAvg = arr => arr.reduce((a, b) => a+b, 0) / arr.length;
+
+    let mortalityScores = {};
+    // iterate over stateRecords obj and set to mortalityScores obj each state as a key w its' avg mortality score
+    for (var key in stateRecords) {
+      mortalityScores[key] = {'mortalityScore': arrAvg(stateRecords[key])};
+    }
+    console.log('mortalityScores', mortalityScores);
+    res.status(200).send(JSON.stringify(mortalityScores));
   })
   .catch((err) => {
     res.status(500).send(err);
