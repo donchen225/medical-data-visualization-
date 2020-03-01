@@ -21,11 +21,22 @@ class App extends React.Component {
     // ------------------------------------------------------------------
     // TODO: Write a get request to the /api/heartFailures endpoint here!
     // ------------------------------------------------------------------
-    
+
     // ------------------------------------------------------------------
     // TODO: Feed the data you receive back into your data visualization.
     // ------------------------------------------------------------------
-    
+
+    axios.get(`/api/heartFailures`)
+      .then((response) => {
+        console.log('client api call worked', response.data);
+        this.setState({
+          data: response.data,
+          renderMap: true
+        })
+      })
+      .catch((error) => {
+        console.error('client api call failed');
+      })
   }
 
 
