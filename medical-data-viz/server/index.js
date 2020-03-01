@@ -10,6 +10,7 @@ app.use(express.static(__dirname + '/../client/dist'));
 // TODO: Fill in the request handler for this endpoint!
 // ----------------------------------------------------
 app.get('/api/heartFailures', (req, res) => {
+  // specify in query that measure_id must be "MORT_30_HF" which represents "Death rate for heart failure patients", state must not be AS, DC, GU, MP, PR, VI, and limit records to 50000
   axios.get(`https://data.medicare.gov/resource/ynj2-r877.json?measure_id='MORT_30_HF'&$LIMIT=50000&$where=state NOT IN ('AS', 'DC', 'GU', 'MP', 'PR', 'VI')`, {
     headers: {
       token: MEDICARE_APP_KEY
