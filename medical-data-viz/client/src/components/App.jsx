@@ -5,6 +5,7 @@ import $ from 'jquery';
 
 import MortalityMap from './MortalityMap.jsx';
 import colorScaleData from '../helpers/colorScaleData.js';
+// const configs = require('../medicare.config.js');
 
 class App extends React.Component {
   constructor(props) {
@@ -30,8 +31,7 @@ class App extends React.Component {
       .then((response) => {
         console.log('client api call worked', response.data);
         this.setState({
-          data: response.data,
-          renderMap: true
+          data: response.data
         })
       })
       .catch((error) => {
