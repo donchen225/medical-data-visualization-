@@ -5,7 +5,6 @@ import $ from 'jquery';
 
 import MortalityMap from './MortalityMap.jsx';
 import colorScaleData from '../helpers/colorScaleData.js';
-// const configs = require('../medicare.config.js');
 
 class App extends React.Component {
   constructor(props) {
@@ -22,14 +21,12 @@ class App extends React.Component {
     // ------------------------------------------------------------------
     // TODO: Write a get request to the /api/heartFailures endpoint here!
     // ------------------------------------------------------------------
-
-    // ------------------------------------------------------------------
-    // TODO: Feed the data you receive back into your data visualization.
-    // ------------------------------------------------------------------
-
     axios.get(`/api/heartFailures`)
       .then((response) => {
         console.log('client api call worked', response.data);
+        //------------------------------------------------------------------
+        // TODO: Feed the data you receive back into your data visualization.
+        //------------------------------------------------------------------
         this.setState({
           data: response.data
         })
@@ -53,8 +50,7 @@ class App extends React.Component {
 
     return (
       <MortalityMap stateMortalityScores={colorScaleData(this.state.data)}
-                    handleButtonClick={this.handleButtonClick}
-      />
+                    handleButtonClick={this.handleButtonClick}/>
     );
   }
 

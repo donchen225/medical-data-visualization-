@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
-const MEDICARE_APP_KEY = require('../client/src/medicare.config.js');
+const PORT = 3011;
+const MEDICARE_APP_KEY = require('../medicare.config.js');
 const axios = require('axios');
 
 app.use(express.static(__dirname + '/../client/dist'));
@@ -10,13 +10,22 @@ app.use(express.static(__dirname + '/../client/dist'));
 // TODO: Fill in the request handler for this endpoint!
 // ----------------------------------------------------
 app.get('/api/heartFailures', (req, res) => {
+
+  // -----------------------------------------------------
+  // TODO: Send a request to the HospitalCompare API here!
+  // -----------------------------------------------------
+
   // specify in query that measure_id must be "MORT_30_HF" which represents "Death rate for heart failure patients", state must not be AS, DC, GU, MP, PR, VI, and limit records to 50000
+
   axios.get(`https://data.medicare.gov/resource/ynj2-r877.json?measure_id='MORT_30_HF'&$LIMIT=50000&$where=state NOT IN ('AS', 'DC', 'GU', 'MP', 'PR', 'VI')`, {
     headers: {
       token: MEDICARE_APP_KEY
     }
   })
   .then(({data}) => {
+    // -----------------------------------------------------
+    // TODO: Do all data processing/wrangling/munging here!
+    // -----------------------------------------------------
     let stateRecords = {};
     // iterate over records in data and check if curr record's state does not exits then initialize to arr w record
     data.forEach((record) => {
@@ -43,16 +52,6 @@ app.get('/api/heartFailures', (req, res) => {
   .catch((err) => {
     res.status(500).send(err);
   })
-  // ----------------------------------------------------
-  // TODO: Fill in the request handler for this endpoint!
-  // ----------------------------------------------------
-    // -----------------------------------------------------
-    // TODO: Send a request to the HospitalCompare API here!
-    // -----------------------------------------------------
-
-    // -----------------------------------------------------
-    // TODO: Do all data processing/wrangling/munging here!
-    // -----------------------------------------------------
 
 });
 
